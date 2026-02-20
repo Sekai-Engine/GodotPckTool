@@ -2,6 +2,14 @@ all: compile
 
 current_dir = $(shell pwd)
 
+# Detect system and set mingw cmake command
+SYSTEM_NAME = $(shell uname -s)
+ifeq ($(findstring Arch,$(shell cat /etc/os-release 2>/dev/null | grep ^NAME=)),Arch)
+    MINGW_CMAKE = mingw-w64-cmake
+else
+    MINGW_CMAKE = mingw32-cmake
+endif
+
 # Uses podman build for the Linux version to make it more widely compatible
 all-install: install-podman install-local-cross
 
@@ -38,16 +46,16 @@ build-cross:
 	mkdir build-cross
 
 cmake-cross: build-cross
-	cd build-cross && mingw32-cmake ..
+	cd build-cross && $(MINGW_CMAKE) ..
 
 cmake-cross-debug: build-cross
-	cd build-cross && mingw32-cmake .. -DCMAKE_BUILD_TYPE=Debug
+	cd build-cross && $(MINGW_CMAKE) .. -DCMAKE_BUILD_TYPE=Debug
 
 compile-cross: cmake-cross
 	$(MAKE) -C build-cross
 
 install-local-cross: build-cross
-	cd build-cross && mingw32-cmake .. -DCMAKE_INSTALL_PREFIX=../install
+	cd build-cross && $(MINGW_CMAKE) .. -DCMAKE_INSTALL_PREFIX=../install
 	$(MAKE) -C build-cross install
 
 .PHONY: all-cross cmake-cross compile-cross install-local-cross

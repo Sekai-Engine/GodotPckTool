@@ -1,10 +1,8 @@
-Godot Pck Tool
-==============
+# Godot Pck Tool
 
 A standalone executable for unpacking and packing Godot .pck files.
 
-Command line usage
-------------------
+## Command line usage
 
 For these you just need the GodotPckTool executable. Available from
 the releases page. Or see the end of this file for building
@@ -74,12 +72,12 @@ inside the pck, it will replace that file.
 To have more control over the resulting paths inside the pck, see the
 section below on the JSON commands.
 
-### Filters
+## Filters
 
 Filters can be used to only act on a subset of files in a pck file, or
 from the filesystem.
 
-#### Min size
+### Min size
 
 Specify the minimum size under which files are excluded:
 
@@ -106,7 +104,7 @@ However, if you want to work on exactly some size files you can specify the same
 godotpcktool --min-size-filter 1 --max-size-filter 1
 ```
 
-#### Include by name
+### Include by name
 
 The option to include files can be given a list of regular expressions that select only files
 that match at least one of them to be processed. For example, you can list all files containing
@@ -133,7 +131,7 @@ filter means "process all files".
 
 Note that filtering is case-sensitive.
 
-#### Exclude by name
+### Exclude by name
 
 Files can also be excluded if they match a regular expression:
 ```sh
@@ -147,7 +145,7 @@ For example to find files containing "po" but no "zh":
 godotpcktool -i '\.po' -e 'zh'
 ```
 
-#### Overriding filters
+### Overriding filters
 
 If you need more complex filtering you can specify regular expressions with
 `--include-override-filter` which makes any file matching any of those
@@ -158,7 +156,7 @@ file size limits and then override those for specific type:
 godotpcktool --min-size-filter 1000 --include-override-filter '\.txt'
 ```
 
-#### JSON bulk operations
+### JSON bulk operations
 
 To have more control over the resulting paths inside the pck file,
 there is a JSON operation API provided.
@@ -200,9 +198,9 @@ paths like `pck/folder/README.txt` rather than `pck/folder/` when
 specifying the JSON commands.
 
 
-### Advanced Options
+## Advanced Options
 
-#### Specifying Engine Version
+### Specifying Engine Version
 
 When creating a .pck file it is possible to specify the Godot engine
 version the .pck says it is created with:
@@ -243,50 +241,50 @@ interpreted as a parameter by adding `--` between the parameters and
 the list of files.
 
 
-Building
---------
+## Building
 
-These are instructions for building this on Fedora, including cross
-compiling to Windows.
+This project uses CMake and has no external dependencies - all third-party libraries are included in the source code.
 
-Note that native Linux build uses the glibc of the currently installed
-system, which may be too new for older distros. For a build that
-supports those, see the section about podman builds.
-
-### Required libraries
+### Linux / macOS
 
 ```sh
-sudo dnf install cmake gcc-c++ libstdc++-static mingw32-gcc-c++ mingw32-winpthreads-static
-```
-
-Also don't forget to init git submodules.
-
-```sh
-git submodule init
-git submodule update
-```
-
-Then just:
-```sh
+mkdir build
+cd build
+cmake ..
 make
 ```
 
-Also if you want to make a folder with the executables and cross compile:
+The compiled binary will be at `build/src/godotpcktool`.
 
+### Windows (MinGW)
+
+```sh
+mkdir build
+cd build
+cmake .. -G "MinGW Makefiles"
+mingw32-make
+```
+
+### Cross-compiling for Windows on Linux
+
+```sh
+mkdir build
+cd build
+cmake .. -DCMAKE_TOOLCHAIN_FILE=../cmake/i686-w64-mingw32.cmake -DCMAKE_BUILD_TYPE=Release
+make
+```
+
+Or use the provided Makefile:
 ```sh
 make all-install
 ```
 
 ### Podman build
 
-Podman can be used to build a Linux binary using the oldest supported
-Ubuntu LTS. This ensures widest compatibility of the resulting binary.
+For maximum compatibility with older Linux distributions, you can build using the oldest supported Ubuntu LTS:
 
-First make sure podman and make are installed, then run the make
-target:
 ```sh
 make compile-podman
 ```
 
-Due to the use of C++ 17 and non-ancient cmake version, the oldest
-working Ubuntu LTS is currently 22.04 (as 20.04 has ended support).
+Due to C++17 and cmake requirements, Ubuntu 22.04 or later is required for native builds.
