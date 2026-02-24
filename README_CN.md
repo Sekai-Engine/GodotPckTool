@@ -217,29 +217,13 @@ make
 
 编译后的二进制文件位于 `build/src/godotpcktool`。
 
-### Windows (MinGW)
-
-```sh
-mkdir build
-cd build
-cmake .. -G "MinGW Makefiles"
-mingw32-make
-```
-
 ### 在 Linux 上交叉编译 Windows 版本
 
 ```sh
-mkdir build
-cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=../cmake/i686-w64-mingw32.cmake -DCMAKE_BUILD_TYPE=Release
-make
+make all-cross
 ```
 
-或者使用提供的 Makefile：
-
-```sh
-make all-install
-```
+编译后的二进制文件位于 `build-cross/src/godotpcktool.exe`。
 
 ### Podman 编译
 

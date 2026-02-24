@@ -248,36 +248,18 @@ This project uses CMake and has no external dependencies - all third-party libra
 ### Linux / macOS
 
 ```sh
-mkdir build
-cd build
-cmake ..
 make
 ```
 
 The compiled binary will be at `build/src/godotpcktool`.
 
-### Windows (MinGW)
-
-```sh
-mkdir build
-cd build
-cmake .. -G "MinGW Makefiles"
-mingw32-make
-```
-
 ### Cross-compiling for Windows on Linux
 
 ```sh
-mkdir build
-cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=../cmake/i686-w64-mingw32.cmake -DCMAKE_BUILD_TYPE=Release
-make
+make all-cross
 ```
 
-Or use the provided Makefile:
-```sh
-make all-install
-```
+The compiled binary will be at `build-cross/src/godotpcktool.exe`.
 
 ### Podman build
 
